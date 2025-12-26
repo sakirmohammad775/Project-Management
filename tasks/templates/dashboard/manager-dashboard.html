@@ -1,0 +1,106 @@
+{% extends 'dashboard/dashboard.html' %}
+
+{% block tasks %}
+
+
+<!--Task Table-->
+<div class="bg-white rounded-xl shadow-sm ">
+    <div class="grid grid-cols-4 p-4 border-gray-100 border-b text-sm text-gray-500">
+        <div>TASK TITLE</div>
+        <div>PRIORITY</div>
+        <div>TEAM</div>
+        <div>CREATED AT</div>
+    </div>
+    <!--Task Items-->
+    <div class="divide-y divide-gray-100">
+        <!--Task item 1-->
+        <div class="grid grid-cols-4 p-4 gap-4 rounded-full">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div>
+                    <span>Test Low Task</span>
+                </div>
+            </div>
+            <div>
+                <span class="px-3 py-1 rounded-full bg-blue-300 text-blue-600 text-sm">Low</span>
+            </div>
+            <div>
+                <div class="flex -space-x-2">
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                </div>
+            </div>
+            <div>
+                <span class="text-gray-500">9 months ago</span>
+            </div>
+        </div>
+
+        <!--Task item 2-->
+        <div class="grid grid-cols-4 p-4 gap-4 rounded-full">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div>
+                    <span>Test Low Task</span>
+                </div>
+            </div>
+            <div>
+                <span class="px-3 py-1 rounded-full bg-blue-300 text-blue-600 text-sm">Low</span>
+            </div>
+            <div>
+                <div class="flex -space-x-2">
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                </div>
+            </div>
+            <div>
+                <span class="text-gray-500">9 months ago</span>
+            </div>
+        </div>
+
+        <!--Task Item 3-->
+        <div class="grid grid-cols-4 p-4 gap-4 rounded-full">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-green-500 rounded-full"></div>
+                <div>
+                    <span>Test Low Task</span>
+                </div>
+            </div>
+            <div>
+                <span class="px-3 py-1 rounded-full bg-blue-300 text-blue-600 text-sm">Low</span>
+            </div>
+            <div>
+                <div class="flex -space-x-2">
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                    <div
+                        class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
+                        CA</div>
+                </div>
+            </div>
+            <div>
+                <span class="text-gray-500">9 months ago</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock tasks %}
