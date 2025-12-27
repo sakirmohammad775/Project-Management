@@ -12,5 +12,9 @@ class Task(models.Model):
 
 class TaskDetail(models.Model):
     PRIORITY_OPTIONS=(
-        ('H',
+        ('H','High'),
+        ('M','Medium'),
+        ('L','Low')
     )
+    assigned_to=models.CharField(max_length=100)
+    priority=models.CharField(max_length=1,choices=PRIORITY_OPTIONS,default="L")
