@@ -7,3 +7,6 @@ def manager_dashboard(request):
 
 def user_dashboard(request):
     return render(request,'dashboard/user-dashboard.html')
+
+def create_task(request):
+    return render(request,'task_form.html')
