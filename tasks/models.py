@@ -4,7 +4,10 @@ from django.db import models
 class Employee(models.Model):
     name=models.CharField(max_length=100) 
     email=models.EmailField(unique=True) #EmailField(unique=True) ensures no duplicate emails # Django auto-creates id as primary key
+    #tasks
     
+    def __str__(self):
+        return self.name #
 
 class Task(models.Model):
     project=models.ForeignKey("Project",on_delete=models.CASCADE,default=1) # many to one(One Project → Many Tasks,Each Task belongs to one project)
