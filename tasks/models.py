@@ -1,47 +1,52 @@
 from django.db import models
 
-# Create your models here.
+
 class Employee(models.Model):
-    name=models.CharField(max_length=100) 
-    email=models.EmailField(unique=True) #EmailField(unique=True) ensures no duplicate emails # Django auto-creates id as primary key
-    #tasks
-    
+    name = models.CharField(max_length=100)
+    email = models.EmailField(unique=True)
+
     def __str__(self):
-        return self.name #
+        return self.name  #
+
 
 class Task(models.Model):
-    project=models.ForeignKey("Project",on_delete=models.CASCADE,default=1) # many to one(One Project → Many Tasks,Each Task belongs to one project)
+    STATUS_CHOICES = [
+        ("PENDING", "pending"),
+        ("IN_PROGRESS", "In Progress"),
+        ("COMPLETED", "completed"),
+    ]
+    project = models.ForeignKey("Project", on_delete=models.CASCADE, default=1)
+    assigned_to = models.ManyToManyField(Employee, related_name="tasks")
+    title = models.CharField(max_length=250)
+    description = models.TextField()
+    due_date = models.DateField()
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="PENDING")
+    is_completed = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     
-    assigned_to=models.ManyToManyField(Employee,related_name='tasks') # many to many (One Task → many Employees One Employee → many Tasks)
-    title=models.CharField(max_length=250)
-    description=models.TextField()
-    due_date=models.DateField()
-    is_completed=models.BooleanField(default=False)
-    created_at=models.DateTimeField(auto_now_add=True)
-    updated_at=models.DateTimeField(auto_now=True)
+    #details
+    
+    def __str__(self):
+        return self.title
 
 
 class TaskDetail(models.Model):
-    HIGH='H' 
-    MEDIUM='M'
-    LOW='L'
+    HIGH = "H"
+    MEDIUM = "M"
+    LOW = "L"
+    PRIORITY_OPTIONS = ((HIGH, "High"), (MEDIUM, "Medium"), (LOW, "Low"))
+    task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name="details")
+    assigned_to = models.CharField(max_length=100)
+    priority = models.CharField(max_length=1, choices=PRIORITY_OPTIONS, default="L")
+    notes=models.TextField(blank=True,null=True)
     
-    PRIORITY_OPTIONS=(
-        (HIGH,"High"),
-        (MEDIUM,"Medium"),
-        (LOW,"Low")
-        
-    )
-    task=models.OneToOneField(Task,on_delete=models.CASCADE,related_name='details') #
-    assigned_to=models.CharField(max_length=100)
-    priority=models.CharField(max_length=1,choices=PRIORITY_OPTIONS,default='L')
-    
-#Task.objects.get(id=2)
-#select*from task where id=2
-#ORM=
+    def __str__(self):
+        return f"Details form Task {self.task.title}"
 
 
-#Represents a project under which multiple tasks can exist.
+# Represents a project under which multiple tasks can exist.
 class Project(models.Model):
-    name=models.CharField(max_length=100)
-    start_date=models.DateField()
+    name = models.CharField(max_length=100)
+    description=models.TextField(blank=True,null=True)
+    start_date = models.DateField()
