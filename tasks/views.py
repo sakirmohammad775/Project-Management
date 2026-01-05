@@ -28,10 +28,8 @@ def create_task(request):
                 "task_form.html",
                 {"form": form, "message": "task added successfully"},
             )
-
     context = {"form": form}
     return render(request, "task_form.html", context)
-
 
 def view_task(request):
     projects=Project.objects.annotate (num_task=Count('task')).order_by("num_task")
