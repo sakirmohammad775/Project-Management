@@ -7,7 +7,21 @@ from django.db.models import Q,Count,Max,Min,Avg
 
 
 def manager_dashboard(request):
-    return render(request, "dashboard/manager-dashboard.html")
+    type=request.GET.get('type') # dynamic query,Urls,Url tag
+    tasks=Task.objects.select_related('details').prefetch_related('assigned_to').all()
+    
+    counts=Task.objects.aggregate(
+        total=Count('id'),
+        completed=Count('id',filter=Q(status='COMPLETED')),
+        in_progress=Count('id',filter=Q(status='IN_PROGRESS')),
+        pending=Count('id',filter=Q(status='PENDING')),
+    )
+    
+    context={
+        "tasks":tasks,
+        "counts":counts
+    }
+    return render(request, "dashboard/manager-dashboard.html",context)
 
 
 def user_dashboard(request):
