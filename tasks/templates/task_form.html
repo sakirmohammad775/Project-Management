@@ -18,8 +18,7 @@
                     <div class="px-2 py-1 {% if message.tags == 'success'%} bg-green-500{% endif %}">{{message}}</div>
                 {% endfor %}
             {% endif %}
-        </div>
-
+        </div> 
         <form method="POST">
             {% csrf_token %}
             {{ task_form}}

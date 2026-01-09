@@ -16,14 +16,16 @@ Manager Dashboard
     </div>
     <!--Task Items-->
     <div class="divide-y divide-gray-100">
-
         {% for task in tasks %}
         <div class="grid grid-cols-4 p-4 gap-4 rounded-full">
             <div class="flex items-center gap-2">
                 <div class="w-2 h-2 bg-green-500 rounded-full"></div>
-                <div>
-                    <span>{{task.title}}</span>
-                </div>
+                <span>{{task.title}}</span>
+                <a href="{% url 'update-task' task.id %}" class="px-2 py-1 rounded-full bg-green-500">Edit</a>
+                <form action="{% url 'delete-task' task.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="px-2 py-1 rounded-full bg-red-500">Delete</a>
+                </form>
             </div>
             <div>
                 <span
@@ -31,24 +33,19 @@ Manager Dashboard
             </div>
             <div>
                 <div class="flex -space-x-2">
-
                     {% for emp in task.assigned_to.all %}
                     <div
                         class="w-8 h-8 rounded-full bg-blue-500 flex items-center text-sm justify-center text-white border-white border-2">
                         {{emp.name|slice:':2'}}
                     </div>
-                    
                     {% endfor %}
-
                 </div>
             </div>
             <div>
                 <span class="text-gray-500">{{task.created_at|timesince}}</span>
             </div>
         </div>
-
         {% endfor %}
-
     </div>
 </div>
 
