@@ -30,7 +30,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'tasks',
     'users',
-    'debug_toolbar'
+    'debug_toolbar',
+    'core'
 ]
 
 MIDDLEWARE = [
@@ -134,7 +135,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS=[
-    BASE_DIR/'static'
+    BASE_DIR / 'static',
 ]

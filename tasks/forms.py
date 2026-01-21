@@ -20,8 +20,16 @@ class TaskForm(forms.Form):
 """Mixing to apply"""
 
 
-class styleFormMixin:
+class StyleFormMixin:
     default_classes = "border border-gray-300 w-full p-3 rounded-lg shadow-sm focus:border-rose-500 focus:outline-none"
+
+    
+    """Using mixins widget"""
+
+    def __init__(self, *arg, **kwarg):
+        super().__init__(*arg, **kwarg)
+        self.apply_styled_widgets()
+
 
     def apply_styled_widgets(self):
         for field_name, field in self.fields.items():
@@ -53,7 +61,7 @@ class styleFormMixin:
 
 
 ### DJANGO MODELFORM
-class TaskModelForm(styleFormMixin, forms.ModelForm):
+class TaskModelForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = Task
         fields = ["title", "description", "due_date", "assigned_to"]
@@ -81,20 +89,8 @@ class TaskModelForm(styleFormMixin, forms.ModelForm):
         #     })
         # }
 
-    """Using mixins widget"""
 
-    def __init__(self, *arg, **kwarg):
-        super().__init__(*arg, **kwarg)
-        self.apply_styled_widgets()
-
-
-class TaskDetailModelForm(styleFormMixin, forms.ModelForm):
+class TaskDetailModelForm(StyleFormMixin, forms.ModelForm):
     class Meta:
         model = TaskDetail
         fields = ["priority", "notes"]
-
-    """Using mixins widget"""
-
-    def __init__(self, *arg, **kwarg):
-        super().__init__(*arg, **kwarg)
-        self.apply_styled_widgets()
