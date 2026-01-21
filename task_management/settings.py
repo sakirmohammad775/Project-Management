@@ -82,23 +82,23 @@ WSGI_APPLICATION = 'task_management.wsgi.application'
 # }
 
 ## PostgreSQL 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql',
-#         'NAME': 'project_management',
-#         'USER': 'postgres',
-#         'PASSWORD': 'password',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
-
 DATABASES = {
-    'default': dj_database_url.config(
-        default='postgresql://project_manager_db_25ww_user:WUXgfzCamS5J2UoHxF9H37D5fO1CVdCY@dpg-d5g9cr15pdvs73cg97eg-a.oregon-postgres.render.com/project_manager_db_25ww',
-        conn_max_age=600
-    )
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'project_management',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
 }
+
+# DATABASES = {
+#     'default': dj_database_url.config(
+#         default='postgresql://project_manager_db_25ww_user:WUXgfzCamS5J2UoHxF9H37D5fO1CVdCY@dpg-d5g9cr15pdvs73cg97eg-a.oregon-postgres.render.com/project_manager_db_25ww',
+#         conn_max_age=600
+#     )
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
