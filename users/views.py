@@ -17,7 +17,6 @@ def sign_up(request):
             #     username = form.cleaned_data.get("username")
             #     password = form.cleaned_data.get("password1")
             #     confirm_password = form.cleaned_data.get("password2")
-
             #     if password == confirm_password:
             #         User.objects.create(username=username, password=password)
             #     else:
