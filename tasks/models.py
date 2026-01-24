@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.dispatch import receiver
+from django.db.models.signals import post_save,pre_save
 
 class Employee(models.Model):
     name = models.CharField(max_length=100) #store employee name
@@ -50,3 +51,8 @@ class Project(models.Model):
     name = models.CharField(max_length=100) #project name
     description=models.TextField(blank=True,null=True) # Optional project description # blank=True → form validation # null=True → database allows NULL
     start_date = models.DateField()
+
+
+@receiver(pre_save,sender=Task)
+def notify_task_creation(sender,instance,**kwargs):
+    instance.is_completed=True
