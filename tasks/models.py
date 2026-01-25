@@ -1,6 +1,5 @@
 from django.db import models
 
-
 class Employee(models.Model):
     name = models.CharField(max_length=100) #store employee name
     email = models.EmailField(unique=True) # store  unique email(no duplicate employees)
@@ -36,7 +35,7 @@ class TaskDetail(models.Model):
     MEDIUM = "M"
     LOW = "L"
     PRIORITY_OPTIONS = ((HIGH, "High"), (MEDIUM, "Medium"), (LOW, "Low"))
-    task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name="details")
+    task = models.OneToOneField(Task, on_delete=models.DO_NOTHING, related_name="details")
     # assigned_to = models.CharField(max_length=100)
     priority = models.CharField(max_length=1, choices=PRIORITY_OPTIONS, default="L")
     notes=models.TextField(blank=True,null=True)
@@ -50,3 +49,5 @@ class Project(models.Model):
     name = models.CharField(max_length=100) #project name
     description=models.TextField(blank=True,null=True) # Optional project description # blank=True → form validation # null=True → database allows NULL
     start_date = models.DateField()
+
+

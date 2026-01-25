@@ -13,7 +13,6 @@
 
 <body>
     <div>
-
         {% if form.non_field_errors %}
         <ul style="color:red">
             {% for error in form.non_field_errors %}
@@ -21,13 +20,10 @@
             {% endfor %}
             {% endif %}
         </ul>
-
         <form action="" method="POST">
             {% csrf_token %}
-
             {% for field in form %}
             <p>
-
                 <label for="{{field.id_for_label}}">
                     {{field.label}}
                 </label>
@@ -40,14 +36,10 @@
             </ul>
             {% endfor %}
             {% endif %}
-
             </p>
             {% endfor %}
             <button type="submit">Sign Up</button>
         </form>
     </div>
-    <h1 class="text-red-500 text-3xl">CSS IS WORKING</h1>
-
 </body>
-
 </html>
