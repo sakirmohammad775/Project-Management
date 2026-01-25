@@ -1,8 +1,4 @@
 from django.db import models
-from django.dispatch import receiver
-from django.db.models.signals import post_save,pre_save,m2m_changed,post_delete
-from django.core.mail import send_mail
-from django.conf import settings
 
 class Employee(models.Model):
     name = models.CharField(max_length=100) #store employee name
@@ -55,24 +51,3 @@ class Project(models.Model):
     start_date = models.DateField()
 
 
-@receiver(m2m_changed,sender=Task.assigned_to.through)
-def notify_task_creation(sender,instance,action,**kwargs):
-    if action=='post_add':
-        print(instance,instance.assigned_to.all())
-        assigned_emails=[emp.email for emp in instance.assigned_to.all()]
-        print("checking...",assigned_emails)
-        
-        send_mail(
-            "New Task Assigned",
-            f"you have been assigned to the task:{instance.title}",
-            from_email=settings.EMAIL_HOST_USER,
-            recipient_list=assigned_emails,
-            fail_silently=False,
-        )
-        
-@receiver(post_delete,sender=Task)
-def delete_associate_details(sender,instance,**kwargs):
-    if instance.details:
-        print(isinstance)
-        instance.details.delete()
-        print("deleted successfully")
