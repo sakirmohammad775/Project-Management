@@ -1,6 +1,7 @@
 from django.db import models
 from django.dispatch import receiver
-from django.db.models.signals import post_save,pre_save
+from django.db.models.signals import post_save,pre_save,m2m_changed,post_delete
+from django.core.mail import send_mail
 
 class Employee(models.Model):
     name = models.CharField(max_length=100) #store employee name
@@ -37,7 +38,7 @@ class TaskDetail(models.Model):
     MEDIUM = "M"
     LOW = "L"
     PRIORITY_OPTIONS = ((HIGH, "High"), (MEDIUM, "Medium"), (LOW, "Low"))
-    task = models.OneToOneField(Task, on_delete=models.CASCADE, related_name="details")
+    task = models.OneToOneField(Task, on_delete=models.DO_NOTHING, related_name="details")
     # assigned_to = models.CharField(max_length=100)
     priority = models.CharField(max_length=1, choices=PRIORITY_OPTIONS, default="L")
     notes=models.TextField(blank=True,null=True)
@@ -53,6 +54,24 @@ class Project(models.Model):
     start_date = models.DateField()
 
 
-@receiver(pre_save,sender=Task)
-def notify_task_creation(sender,instance,**kwargs):
-    instance.is_completed=True
+@receiver(m2m_changed,sender=Task.assigned_to.through)
+def notify_task_creation(sender,instance,action,**kwargs):
+    if action=='post_add':
+        print(instance,instance.assigned_to.all())
+        assigned_emails=[emp.email for emp in instance.assigned_to.all()]
+        print("checking...",assigned_emails)
+        
+        send_mail(
+            "New Task Assigned",
+            f"you have been assigned to the task:{instance.title}"
+            "aislash05@gmail.com",
+            assigned_emails,
+            fail_silently=False
+        )
+        #cha
+@receiver(post_delete,sender=Task)
+def delete_associate_details(sender,instance,**kwargs):
+    if instance.details:
+        print(isinstance)
+        instance.details.delete()
+        print("deleted successfully")
