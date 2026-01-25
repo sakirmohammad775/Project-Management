@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from users.forms import CustomRegistrationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
+from users.forms import loginForm
 
 
 # jbh234OINa!@
@@ -28,16 +29,14 @@ def sign_up(request):
 
 
 def sign_in(request):
+    form = loginForm()
     if request.method == "POST":
-        username = request.POST.get("username")
-        password = request.POST.get("password")
-        print("Doc", username, password)
-        user = authenticate(request, username=username, password=password)
-        print(user)
-        if user is not None:
+        form = loginForm(data=request.POST)
+        if form.is_valid():
+            user = form.get_user()
             login(request, user)
             return redirect("home")
-    return render(request, "registration/login.html")
+    return render(request, "registration/login.html", {"form": form})
 
 
 def sign_out(request):
