@@ -15,7 +15,7 @@ def sign_up(request):
         form = CustomRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password1"])  # ✅ THIS LINE
+            user.set_password(form.cleaned_data["password1"])  
             user.is_active = False
             user.save()
 
@@ -56,3 +56,18 @@ def activate_user(request,user_id,token):
             return HttpResponse('Invalid Id or token')
     except User.DoesNotExist:
         return HttpResponse('User not found')
+    
+    
+"""
+    Admin
+        - All over access
+    Manager
+        - project
+        -Task create
+    Employee
+        -task read 
+        - task update
+"""
+
+def admin_dashboard(request):
+    return render(request,'admin/dashboard.html')
