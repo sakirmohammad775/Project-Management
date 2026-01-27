@@ -1,7 +1,7 @@
-from django.shortcuts import render,redirect,HttpResponse
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from users.forms import CustomRegistrationForm
+from users.forms import CustomRegistrationForm, AssignRoleForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from users.forms import loginForm
@@ -15,7 +15,7 @@ def sign_up(request):
         form = CustomRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password1"])  
+            user.set_password(form.cleaned_data["password1"])
             user.is_active = False
             user.save()
 
@@ -45,19 +45,20 @@ def sign_out(request):
         logout(request)
         return redirect("home")
 
-def activate_user(request,user_id,token):
+
+def activate_user(request, user_id, token):
     try:
-        user=User.objects.get(id=user_id)
-        if default_token_generator.check_token(user,token):
-            user.is_active=True
+        user = User.objects.get(id=user_id)
+        if default_token_generator.check_token(user, token):
+            user.is_active = True
             user.save()
-            return redirect('sign-in')
+            return redirect("sign-in")
         else:
-            return HttpResponse('Invalid Id or token')
+            return HttpResponse("Invalid Id or token")
     except User.DoesNotExist:
-        return HttpResponse('User not found')
-    
-    
+        return HttpResponse("User not found")
+
+
 """
     Admin
         - All over access
@@ -69,5 +70,22 @@ def activate_user(request,user_id,token):
         - task update
 """
 
+
 def admin_dashboard(request):
-    return render(request,'admin/dashboard.html')
+    users = User.objects.all()
+    return render(request, "admin/dashboard.html", {"users": users})
+
+
+def assign_role(request, user_id):
+    user = User.objects.get(id=user_id)
+    form=AssignRoleForm()
+
+    if request.method == "POST":
+        form = AssignRoleForm(request.POST)
+        if form.is_valid():
+            role = form.cleaned_data.get("role")
+            user.groups.clear()
+            user.groups.add(role)
+            messages.success(request,f"User {user.username} has been assigned to the {role.name} role")
+            return redirect ('admin-dashboard')
+    return render(request,'admin/assign_role.html',{"form":form})
