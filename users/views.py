@@ -43,7 +43,7 @@ def sign_in(request):
 def sign_out(request):
     if request.method == "POST":
         logout(request)
-        return redirect("home")
+        return redirect("sign-in")
 
 
 def activate_user(request, user_id, token):
