@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 class Employee(models.Model):
     name = models.CharField(max_length=100) #store employee name
@@ -15,12 +16,11 @@ class Task(models.Model): #represents an individual task under a project
         ("COMPLETED", "completed"),
     ]
     project = models.ForeignKey("Project", on_delete=models.CASCADE, default=1) #Many to One  relationship ,many tasks belong to one project, delete tasks if project is deleted
-    assigned_to = models.ManyToManyField(Employee, related_name="tasks") # M2M relationships ,
+    assigned_to = models.ManyToManyField(User, related_name="tasks") # M2M relationships ,
     title = models.CharField(max_length=250)
     description = models.TextField()
     due_date = models.DateField()
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default="PENDING")
-    is_completed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
