@@ -67,14 +67,16 @@ def activate_user(request, user_id, token):
 
 
 """
+
     Admin
         - All over access
     Manager
-        - project
-        -Task create
+        - Project
+        - Task create
     Employee
-        -task read 
-        - task update
+        - Task read 
+        - Task update
+        
 """
 # @user_passes_test(is_admin,login_url='no-permission')
 # def admin_dashboard(request):

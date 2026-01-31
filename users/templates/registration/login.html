@@ -1,38 +1,92 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="{% static 'css/output.css' %}">
-
-</head>
-
-<body>
-    <h1>Welcome to Authentication System</h1>
-    <div>
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg border border-gray-100">
+        
+        <div class="text-center">
+            <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+                Welcome Back
+            </h2>
+            <p class="mt-2 text-sm text-gray-600">
+                Please sign in to your account
+            </p>
+        </div>
 
         {% if messages %}
-        {% for message in messages %}
-        <div class="px-2 py-1 {% if message.tags == 'success'%} bg-green-500{% endif %}">{{message}}</div>
-        {% endfor %}
-        {% endif %}
-
-        
-        {% if form.non_field_errors %}
-            {% for error in form.non_field_errors  %}
-                {{error}}
+        <div class="space-y-2">
+            {% for message in messages %}
+            <div class="px-4 py-3 rounded-lg text-sm font-medium {% if message.tags == 'success' %} bg-green-100 text-green-700 border border-green-200 {% else %} bg-red-100 text-red-700 border border-red-200 {% endif %}">
+                {{ message }}
+            </div>
             {% endfor %}
+        </div>
         {% endif %}
 
-        <form method="POST">
-            {% csrf_token %}
-           {{form}}
-            <button class="bg-blue-400 px-2 py-2" type="submit">Sign In</button>
-        </form>
-    </div>
-</body>
+        {% if form.non_field_errors %}
+        <div class="bg-red-50 text-red-600 p-3 rounded-md text-sm">
+            {% for error in form.non_field_errors %}
+            {{ error }}
+            {% endfor %}
+        </div>
+        {% endif %}
 
-</html>
+        <form class="mt-8 space-y-6" method="POST">
+            {% csrf_token %}
+            
+            <div class="rounded-md shadow-sm space-y-4">
+                {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700 mb-1">
+                        {{ field.label }}
+                    </label>
+                    <div class="relative">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            <div class="flex items-center justify-between">
+                <div class="text-sm">
+                    <a href="#" class="font-medium text-blue-600 hover:text-blue-500">
+                        Forgot your password?
+                    </a>
+                </div>
+            </div>
+
+            <div>
+                <button type="submit" class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-bold rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-150 ease-in-out">
+                    SIGN IN
+                </button>
+            </div>
+        </form>
+
+        <div class="text-center mt-4">
+            <p class="text-sm text-gray-500">
+                Don't have an account? <a href="#" class="text-blue-600 font-semibold hover:underline">Sign up</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Since we are using {{form}}, Django renders inputs. This CSS targets them to look like Tailwind inputs */
+    input[type="text"], input[type="password"], input[type="email"], select, textarea {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        background-color: #f9fafb;
+    }
+    input:focus {
+        outline: none;
+        border-color: #3b82f6;
+        ring: 2px;
+        ring-color: #3b82f6;
+    }
+</style>
+{% endblock content %}

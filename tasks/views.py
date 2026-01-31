@@ -8,13 +8,13 @@ from django.contrib.auth.decorators import user_passes_test,login_required,permi
 
 
 def is_manager(user):
-    return user.groups.filter(name='manager'.exits())
+    return user.groups.filter(name='manager').exists()
+
 
 def is_employee(user):
-    return user.groups.filter(name='manager'.exits())
-
+    return user.groups.filter(name='employee').exists()
 # Create your views here.
-@user_passes_test(is_manager,login_url='no-permission')
+# @user_passes_test(is_manager,login_url='no-permission')
 def manager_dashboard(request):
     type = request.GET.get("type", "all")  # dynamic query,Urls,Url tag
 

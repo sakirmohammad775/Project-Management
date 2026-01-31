@@ -1,45 +1,92 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+{% block content %}
+<div class="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-2xl shadow-xl border border-gray-200">
+        
+        <div class="text-center">
+            <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Create Account</h2>
+            <p class="mt-2 text-sm text-gray-500">Join our community today</p>
+        </div>
 
-</head>
-
-<body>
-    <div>
         {% if form.non_field_errors %}
-        <ul style="color:red">
-            {% for error in form.non_field_errors %}
-            {{error}}
-            {% endfor %}
-            {% endif %}
-        </ul>
-        <form action="" method="POST">
+        <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+            <ul class="text-sm text-red-700">
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+        <form action="" method="POST" class="mt-8 space-y-5">
             {% csrf_token %}
+            
             {% for field in form %}
-            <p>
-                <label for="{{field.id_for_label}}">
-                    {{field.label}}
+            <div class="flex flex-col">
+                <label for="{{ field.id_for_label }}" class="text-sm font-semibold text-gray-700 mb-1 px-1">
+                    {{ field.label }}
                 </label>
-                {{field}}
+                
+                <div class="django-field-wrapper">
+                    {{ field }}
+                </div>
 
                 {% if field.errors %}
-                {% for error in field.errors %}
-            <ul>
-                <li>{{error}}</li>
-            </ul>
+                <ul class="mt-1">
+                    {% for error in field.errors %}
+                    <li class="text-xs text-red-600 font-medium italic">⚠️ {{ error }}</li>
+                    {% endfor %}
+                </ul>
+                {% endif %}
+            </div>
             {% endfor %}
-            {% endif %}
-            </p>
-            {% endfor %}
-            <button type="submit">Sign Up</button>
+
+            <div class="pt-4">
+                <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-all transform active:scale-95">
+                    SIGN UP
+                </button>
+            </div>
         </form>
+
+        <div class="text-center pt-2">
+            <p class="text-xs text-gray-500">
+                Already have an account? 
+                <a href="#" class="text-indigo-600 font-bold hover:text-indigo-500">Log in</a>
+            </p>
+        </div>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+    /* Targets the Django-generated {{field}} inputs */
+    input[type="text"], 
+    input[type="email"], 
+    input[type="password"], 
+    input[type="number"], 
+    select, 
+    textarea {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 0.75rem;
+        background-color: #f9fafb;
+        transition: all 0.2s;
+        font-size: 0.875rem;
+    }
+
+    input:focus {
+        outline: none;
+        border-color: #4f46e5;
+        background-color: #ffffff;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+    }
+
+    /* Styles for checkboxes if present in form */
+    input[type="checkbox"] {
+        width: auto;
+        margin-right: 0.5rem;
+        border-radius: 0.25rem;
+    }
+</style>
+{% endblock content %}
