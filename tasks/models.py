@@ -1,13 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-class Employee(models.Model):
-    name = models.CharField(max_length=100) #store employee name
-    email = models.EmailField(unique=True) # store  unique email(no duplicate employees)
-
-    def __str__(self):
-        return self.name  #defines how object appears in admin shell
-
 
 class Task(models.Model): #represents an individual task under a project
     STATUS_CHOICES = [      #choice restrict values and help  Ui Consistency
