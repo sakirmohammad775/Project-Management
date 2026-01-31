@@ -14,16 +14,16 @@
     <div class="w-1/2 mx-auto mt-8">
         <div>
             {% if messages %}
-                {% for message in messages %}
-                    <div class="px-2 py-1 {% if message.tags == 'success'%} bg-green-500{% endif %}">{{message}}</div>
-                {% endfor %}
+            {% for message in messages %}
+            <div class="px-2 py-1 {% if message.tags == 'success'%} bg-green-500{% endif %}">{{message}}</div>
+            {% endfor %}
             {% endif %}
-        </div> 
-        <form method="POST">
+        </div>
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ task_form}}
             {{task_detail_form}}
-            <button type="submit" class="bg-rose-600 px-3 py-2 mb-5 rounded-md text-white" >Submit</button>
+            <button type="submit" class="bg-rose-600 px-3 py-2 mb-5 rounded-md text-white">Submit</button>
         </form>
     </div>
 </body>

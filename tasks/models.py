@@ -30,6 +30,7 @@ class TaskDetail(models.Model):
     PRIORITY_OPTIONS = ((HIGH, "High"), (MEDIUM, "Medium"), (LOW, "Low"))
     task = models.OneToOneField(Task, on_delete=models.DO_NOTHING, related_name="details")
     # assigned_to = models.CharField(max_length=100)
+    asset=models.ImageField(upload_to='tasks_asset',blank=True,null=True)
     priority = models.CharField(max_length=1, choices=PRIORITY_OPTIONS, default="L")
     notes=models.TextField(blank=True,null=True)
     
