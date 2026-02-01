@@ -5,16 +5,16 @@ from tasks.models import Task, TaskDetail, Project
 from django.db.models import Q, Count, Max, Min, Avg
 from django.contrib import messages
 from django.contrib.auth.decorators import user_passes_test,login_required,permission_required
-
+from users.views import is_admin
 
 def is_manager(user):
-    return user.groups.filter(name='manager').exists()
-
+    return user.groups.filter(name='Manager').exists()
 
 def is_employee(user):
     return user.groups.filter(name='employee').exists()
+
 # Create your views here.
-# @user_passes_test(is_manager,login_url='no-permission')
+@user_passes_test(is_manager,login_url='no-permission')
 def manager_dashboard(request):
     type = request.GET.get("type", "all")  # dynamic query,Urls,Url tag
 
@@ -37,7 +37,10 @@ def manager_dashboard(request):
     elif type == "all":
         tasks = base_query.all()
 
-    context = {"tasks": tasks, "counts": counts}
+    context = {"tasks": tasks, 
+               "counts": counts,
+               "role":'manager'
+               }
     return render(request, "dashboard/manager-dashboard.html", context)
 
 @user_passes_test(is_employee)
@@ -65,7 +68,8 @@ def create_task(request):
             messages.success(request, "Task Added Successfully")
             return redirect("create-task")
 
-    context = {"task_form": task_form, "task_detail_form": task_detail_form}
+    context = {"task_form": task_form, 
+               "task_detail_form": task_detail_form}
     return render(request, "task_form.html", context)
 
 @login_required
@@ -128,3 +132,12 @@ def task_details(request,task_id):
         return redirect('task-details',task.id)
     return render(request,'task_details.html',{'task': task,'status_choices':status_choice})
 
+@login_required
+def dashboard(request):
+    if is_manager(request.user):
+        return redirect('manager-dashboard')
+    elif is_employee(request.user):
+        return redirect('user-dashboard')
+    elif is_admin(request.user):
+        return redirect('admin-dashboard')
+    return redirect('no-permission')
