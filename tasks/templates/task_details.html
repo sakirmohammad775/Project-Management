@@ -19,14 +19,21 @@
             Task Detail
         </button>
         <div class="flex items-center gap-2">
-            <select name="task_status" id="task_status" class="px-4 py-2 border rounded-md">
-                <option value="pending">Pending</option>
-                <option value="in_progress">In Progress</option>
-                <option value="completed">Completed</option>
-            </select>
-            <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" type="submit">
-                Change Status
-            </button>
+            <form method="POST">
+                {% csrf_token %}
+                <select name="task_status" id="task_status" class="px-4 py-2 border rounded-md">
+                    
+                    {% for value,label in status_choices  %}
+                    <option value="{{value}}">{{label}}</option>
+                    {% endfor %}
+                        
+                        
+                
+                </select>
+                <button class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600" type="submit">
+                    Change Status
+                </button>
+            </form>
         </div>
     </div>
 
