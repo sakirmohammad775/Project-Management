@@ -24,7 +24,9 @@ def is_employee(user):
 
 
 # Create your views here.
-@user_passes_test(is_manager, login_url="no-permission")
+user_passes_test(is_manager, login_url="no-permission")
+
+
 def manager_dashboard(request):
     type = request.GET.get("type", "all")  # dynamic query,Urls,Url tag
 
@@ -80,11 +82,13 @@ def create_task(request):
     context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, "task_form.html", context)
 
+
 # variable for list of decorators
 create_decorators = [
     login_required,
     permission_required("tasks.add_task", login_url="no-permission"),
 ]
+
 
 @method_decorator(create_decorators, name="dispatch")
 class CreateTask(View):
@@ -140,6 +144,44 @@ def update_task(request, id):
 
     context = {"task_form": task_form, "task_detail_form": task_detail_form}
     return render(request, "task_form.html", context)
+
+
+############ Class based Version ######## CBV-Update
+@method_decorator(login_required, name="dispatch")
+@method_decorator(
+    permission_required("tasks.change_task", login_url="no-permission"), name="dispatch"
+)
+class UpdateTask(View):
+    def get(self, request, id):
+        task = Task.objects.get(id=id)
+        task_form = TaskModelForm(instance=task)
+        task_detail_form = TaskDetailModelForm(instance=task.details)
+        return render(
+            request,
+            "task_form.html",
+            {"task_form": task_form, "task_detail_form": task_detail_form},
+        )
+
+    def post(self, request, id):
+        task = Task.objects.get(id=id)
+        task_form = TaskModelForm(request.POST, instance=task)
+        task_detail_form = TaskDetailModelForm(
+            request.POST, request.FILES, instance=task.details
+        )
+
+        if task_form.is_valid() and task_detail_form.is_valid():
+
+            """For Model form data"""
+            task_form.save()
+            task_detail_form.save()
+            messages.success(request, "Task Updated Successfully")
+            return redirect("update-task", id=id)
+
+        return render(
+            request,
+            "task_form.html",
+            {"task_form": task_form, "task_detail_form": task_detail_form},
+        )
 
 
 @login_required
