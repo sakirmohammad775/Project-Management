@@ -16,6 +16,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.base import ContextMixin
+from django.views.generic import ListView
 
 def is_manager(user):
     return user.groups.filter(name="Manager").exists()
@@ -214,6 +215,22 @@ def view_task(request):
     projects = Project.objects.annotate(num_task=Count("task")).order_by("num_task")
     return render(request, "show_task.html", {"projects": projects})
 
+############CVB view project######
+view_project_decorators = [
+    login_required,
+    permission_required("projects.view_project", login_url="no-permission"),
+]
+@method_decorator(view_project_decorators,name='dispatch')
+class ViewProject(ListView):
+    model=Project
+    context_object_name='projects'
+    template_name='show_task.html'
+
+    def get_queryset(self):
+        queryset=Project.objects.annotate(
+            num_task=Count('task')
+        ).order_by('num_task')
+        return queryset
 
 @login_required
 @permission_required("tasks.view_task", login_url="no-permission")
