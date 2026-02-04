@@ -16,7 +16,7 @@ from django.utils.decorators import method_decorator
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import PermissionRequiredMixin
 from django.views.generic.base import ContextMixin
-from django.views.generic import ListView
+from django.views.generic import ListView,DetailView
 
 def is_manager(user):
     return user.groups.filter(name="Manager").exists()
@@ -248,6 +248,24 @@ def task_details(request, task_id):
     )
 
 
+class TaskDetail(DetailView):
+    model=Task
+    template_name='task_details.html'
+    context_object_name='task'
+    pk_url_kwarg='task_id'
+    
+    def get_context_data(self, **kwargs):
+        context=super().get_context_data(**kwargs)
+        context['status_choices']=Task.STATUS_CHOICES
+        return context
+    
+    def post(self,request,*args,**kwargs):
+        task=self.get_object()
+        selected_status=request.POST.get('task_status')
+        task.status=selected_status
+        task.save()
+        return redirect('task-details',task.id)
+    
 @login_required
 def dashboard(request):
     if is_manager(request.user):
@@ -257,3 +275,4 @@ def dashboard(request):
     elif is_admin(request.user):
         return redirect("admin-dashboard")
     return redirect("no-permission")
+ 
