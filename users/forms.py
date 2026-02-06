@@ -3,7 +3,7 @@ import re
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User,Group,Permission
 from tasks.forms import StyleFormMixin
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm
 
 
 class RegisterForm(UserCreationForm):
@@ -104,3 +104,6 @@ class CreateGroupForm(StyleFormMixin,forms.ModelForm):
     class Meta:
         model=Group
         fields=['name','permissions']
+        
+class CustomPasswordChangeForm(StyleFormMixin,PasswordChangeForm):
+    pass
