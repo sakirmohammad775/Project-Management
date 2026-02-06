@@ -4,7 +4,7 @@ from django.contrib.auth.models import User, Group
 from users.forms import CustomRegistrationForm, AssignRoleForm, CreateGroupForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
-from users.forms import loginForm
+from users.forms import LoginForm
 from django.contrib.auth.tokens import default_token_generator
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.db.models import Prefetch
@@ -49,7 +49,7 @@ def sign_in(request):
 
 
 class CustomLoginView(LoginView):
-    form_class = LoginView
+    form_class = LoginForm
 
     def get_success_url(self):
         next_url = self.request.GET.get('next')

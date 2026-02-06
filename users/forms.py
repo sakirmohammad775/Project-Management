@@ -82,7 +82,7 @@ class CustomRegistrationForm(StyleFormMixin, forms.ModelForm):
         return cleaned_data
 
 
-class loginForm(AuthenticationForm, StyleFormMixin):
+class LoginForm(AuthenticationForm, StyleFormMixin):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
