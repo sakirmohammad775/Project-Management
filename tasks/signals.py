@@ -7,9 +7,9 @@ from tasks.models import Task
 @receiver(m2m_changed,sender=Task.assigned_to.through)
 def notify_task_creation(sender,instance,action,**kwargs):
     if action=='post_add':
-        print(instance,instance.assigned_to.all())
+        # print(instance,instance.assigned_to.all())
         assigned_emails=[emp.email for emp in instance.assigned_to.all()]
-        print("checking...",assigned_emails)
+        # print("checking...",assigned_emails)
         
         send_mail(
             "New Task Assigned",
@@ -22,6 +22,6 @@ def notify_task_creation(sender,instance,action,**kwargs):
 @receiver(post_delete,sender=Task)
 def delete_associate_details(sender,instance,**kwargs):
     if instance.details:
-        print(isinstance)
+        # print(isinstance)
         instance.details.delete()
-        print("deleted successfully")
+        # print("deleted successfully")
