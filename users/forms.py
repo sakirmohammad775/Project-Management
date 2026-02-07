@@ -1,9 +1,14 @@
 from django import forms
 import re
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User,Group,Permission
+from django.contrib.auth.models import User, Group, Permission
 from tasks.forms import StyleFormMixin
-from django.contrib.auth.forms import AuthenticationForm,PasswordChangeForm,PasswordResetForm,SetPasswordForm
+from django.contrib.auth.forms import (
+    AuthenticationForm,
+    PasswordChangeForm,
+    PasswordResetForm,
+    SetPasswordForm,
+)
 
 
 class RegisterForm(UserCreationForm):
@@ -88,27 +93,64 @@ class LoginForm(AuthenticationForm, StyleFormMixin):
         super().__init__(*args, **kwargs)
 
 
-class AssignRoleForm(StyleFormMixin,forms.Form):
+class AssignRoleForm(StyleFormMixin, forms.Form):
     role = forms.ModelChoiceField(
         queryset=Group.objects.all(), empty_label="Select a Role"
     )
 
-class CreateGroupForm(StyleFormMixin,forms.ModelForm):
-    permissions=forms.ModelMultipleChoiceField(
+
+class CreateGroupForm(StyleFormMixin, forms.ModelForm):
+    permissions = forms.ModelMultipleChoiceField(
         queryset=Permission.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False,
-        label='Assign Permission'
+        label="Assign Permission",
     )
-    
+
     class Meta:
-        model=Group
-        fields=['name','permissions']
-        
-class CustomPasswordChangeForm(StyleFormMixin,PasswordChangeForm):
+        model = Group
+        fields = ["name", "permissions"]
+
+
+class CustomPasswordChangeForm(StyleFormMixin, PasswordChangeForm):
     pass
 
-class CustomPasswordResetForm(StyleFormMixin,PasswordResetForm):
+
+class CustomPasswordResetForm(StyleFormMixin, PasswordResetForm):
     pass
-class CustomPasswordResetConfirmForm(StyleFormMixin,SetPasswordForm):
+
+
+class CustomPasswordResetConfirmForm(StyleFormMixin, SetPasswordForm):
     pass
+
+
+class EditProfileForm(StyleFormMixin,forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["email", "first_name", "last_name"]
+
+    bio = forms.CharField(required=False, widget=forms.Textarea,label='bio')
+    profile_image = forms.ImageField(required=False,label='Profile Image')
+
+    def __init__(self, *args, **kwargs):
+        self.userprofile=kwargs.pop('userprofile',None)
+        super().__init__(*args, **kwargs)
+
+        # todo: Handle Error
+
+        if self.userprofile:
+            self.fields["bio"].initial = self.userprofile.bio
+            self.fields["profile_image"].initial = self.userprofile.profile_image
+
+    def save(self, commit=True):
+        user = super().save(commit)
+
+        # save userProfile has
+        if self.userprofile:
+            self.userprofile.bio = self.cleaned_data.get("bio")
+            self.userprofile.profile_image = self.cleaned_data.get("profile_image")
+            if commit:
+                self.userprofile.save()
+        if commit:
+            user.save()
+        return user
