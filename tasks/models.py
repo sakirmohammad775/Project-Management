@@ -1,6 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
-
+from  django.conf import settings
 
 class Task(models.Model): #represents an individual task under a project
     STATUS_CHOICES = [      #choice restrict values and help  Ui Consistency
@@ -9,7 +8,7 @@ class Task(models.Model): #represents an individual task under a project
         ("COMPLETED", "completed"),
     ]
     project = models.ForeignKey("Project", on_delete=models.CASCADE, default=1) #Many to One  relationship ,many tasks belong to one project, delete tasks if project is deleted
-    assigned_to = models.ManyToManyField(User, related_name="tasks") # M2M relationships ,
+    assigned_to = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="tasks") # M2M relationships ,
     title = models.CharField(max_length=250)
     description = models.TextField()
     due_date = models.DateField()

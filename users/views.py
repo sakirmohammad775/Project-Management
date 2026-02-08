@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import  Group
 from users.forms import CustomRegistrationForm, AssignRoleForm, CreateGroupForm,CustomPasswordChangeForm,CustomPasswordResetForm,CustomPasswordResetConfirmForm,EditProfileForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
@@ -12,10 +12,12 @@ from django.contrib.auth.views import LoginView,PasswordChangeView,PasswordReset
 from django.views.generic import TemplateView,UpdateView
 from django.contrib.auth.views import PasswordResetView
 from django.urls import reverse_lazy
-from users.models import User,UserProfile
 
+from django.contrib.auth import get_user_model
 
+User=get_user_model()
 
+"""
 class EditProfileView(UpdateView):
     model = User
     form_class = EditProfileForm
@@ -41,32 +43,46 @@ class EditProfileView(UpdateView):
     def form_valid(self, form):
         form.save(commit=True)
         return redirect('profile')
-    
+   
+"""
+class EditProfileView(UpdateView):
+    model = User
+    form_class = EditProfileForm
+    template_name = 'accounts/update_profile.html'
+    context_object_name = 'form'
+
+    def get_object(self):
+        return self.request.user
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('profile')
+   
+
+ 
 # Test for users
 def is_admin(user):
     return user.groups.filter(name="Admin").exists()
 
-
 # jbh234OINa!@
 # Create your views here.
 def sign_up(request):
-    if request.method == "POST":
+    form = CustomRegistrationForm()
+    if request.method == 'POST':
         form = CustomRegistrationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.set_password(form.cleaned_data["password1"])
+            user.set_password(form.cleaned_data.get('password1'))
             user.is_active = False
             user.save()
-
+            print(user)
             messages.success(
-                request, "A confirmation mail sent. Please check your email"
-            )
-            return redirect("sign-in")
-    else:
-        form = CustomRegistrationForm()
+                request, 'A Confirmation mail sent. Please check your email')
+            return redirect('sign-in')
 
-    return render(request, "registration/register.html", {"form": form})
-
+        else:
+            print("Form is not valid")
+    return render(request, 'registration/register.html', {"form": form})
 
 def sign_in(request):
     form = loginForm()
@@ -192,8 +208,8 @@ class ProfileView(TemplateView):
         context['username']=user.username
         context['email']=user.email
         context['name']=user.get_full_name()
-        context['bio']=user.userprofile.bio
-        context['profile_image']=user.userprofile.profile_image
+        context['bio']=user.bio
+        context['profile_image']=user.profile_image
         
         context['member_since']=user.date_joined
         context['last_login']=user.last_login

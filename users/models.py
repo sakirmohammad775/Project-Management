@@ -1,7 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
-
-
+from django.contrib.auth.models import AbstractUser
+"""
 # Create your models here.
 class UserProfile(models.Model):
     user = models.OneToOneField(
@@ -12,3 +11,10 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"self.user.username Profile"
+"""
+class CustomUser(AbstractUser):
+    profile_image=models.ImageField(upload_to='profile_images',blank=True,default='profile_images/default.jpg')
+    bio=models.TextField(blank=True)
+    
+    def __str__(self):
+        return self.username
